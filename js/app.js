@@ -27,6 +27,7 @@
     renderQuests(data);
     renderHobbies(data);
     renderLinks(data);
+    renderReviews();
 
     if (V.sprites && V.sprites.hydrate) {
       V.sprites.hydrate();
@@ -405,12 +406,42 @@
     });
   }
 
+  function renderReviews() {
+    const container = document.getElementById("homepage-reviews-grid");
+    if (!container) return;
+    const posts = (window.BlogStore && window.BlogStore.getAllPosts)
+      ? window.BlogStore.getAllPosts()
+      : (window.POSTS || []);
+
+    if (posts.length === 0) return;
+
+    container.innerHTML = posts.slice(0, 4).map((p) => `
+      <article class="project-card px-frame px-shadow">
+        <header class="project-header">
+          <span class="project-title">${p.game || p.title}</span>
+          <span class="project-status">★ ${p.score || '—'}</span>
+        </header>
+        <div class="project-body">
+          <div class="project-meta">${p.date} · ${p.genre || ''}</div>
+          <p class="project-desc">${p.summary || p.subtitle || ''}</p>
+          <div class="project-tags">
+            ${(p.tags || []).map((t) => `<span class="tag">${t}</span>`).join(" ")}
+          </div>
+        </div>
+        <footer class="project-footer">
+          <button class="btn-px px-frame read-review-btn" type="button" data-review="${p.id}">[ READ REVIEW ]</button>
+        </footer>
+      </article>
+    `).join("");
+  }
+
   // Built-in Review Modal Reader
   const SAMPLE_REVIEWS = {
     "2026-10-06-the-finals": {
       title: "THE FINALS — 모든 것을 파괴하는 쾌감과 게임성",
       date: "2026.10.06",
-      score: "9.2 / 10",
+      score: "9.2",
+      game: "THE FINALS",
       content: `
         <h3>왜 THE FINALS인가?</h3>
         <p>기존 하이퍼 FPS들이 단순히 에임과 스킬 쿨타임 싸움이었다면, THE FINALS는 <b>'지형 파괴'</b>라는 변수로 게임의 공식을 완전히 바꿨습니다.</p>
@@ -425,13 +456,24 @@
     },
   };
 
-  function openReview(slug) {
-    const review = SAMPLE_REVIEWS[slug] || {
-      title: "리뷰 준비 중",
-      date: "2026",
-      score: "—",
-      content: "<p>곧 작성될 리뷰 글입니다. 블로그 페이지에서 더 많은 글을 만나보세요!</p>",
-    };
+  function openReview(id) {
+    const posts = (window.BlogStore && window.BlogStore.getAllPosts)
+      ? window.BlogStore.getAllPosts()
+      : (window.POSTS || []);
+
+    let review = posts.find((p) => p.id === id || p.review === id);
+    if (!review && SAMPLE_REVIEWS[id]) {
+      review = SAMPLE_REVIEWS[id];
+    }
+    if (!review) {
+      review = {
+        title: "리뷰 준비 중",
+        date: "2026",
+        score: "—",
+        game: "GAME",
+        content: "<p>리뷰 글을 불러올 수 없습니다. 블로그 페이지에서 확인해보세요!</p>",
+      };
+    }
 
     const modalTitle = document.getElementById("review-title");
     const modalDate = document.getElementById("review-date");
@@ -439,8 +481,8 @@
     const modalBody = document.getElementById("review-body");
 
     if (modalTitle) modalTitle.textContent = review.title;
-    if (modalDate) modalDate.textContent = review.date;
-    if (modalScore) modalScore.textContent = `SCORE: ${review.score}`;
+    if (modalDate) modalDate.textContent = `${review.date} · [ ${review.game || ''} ]`;
+    if (modalScore) modalScore.textContent = `SCORE: ${review.score} / 10`;
     if (modalBody) modalBody.innerHTML = review.content;
 
     openWindow("win-review");

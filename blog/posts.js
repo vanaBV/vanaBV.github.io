@@ -1,8 +1,10 @@
 /* =========================================================
-   vanaBV — GAME REVIEW BLOG POSTS
-   게임 리뷰 글을 추가하려면 아래 배열에 새 객체를 추가하기만 하면 됩니다!
+   vanaBV — GAME REVIEW BLOG POSTS & DATA STORE
+   기본 게시글 + 개발자 모드(8771)에서 작성한 사용자 게시글을 통합 관리합니다.
    ========================================================= */
-window.POSTS = [
+
+// 기본 내장 게시글 목록
+window.DEFAULT_POSTS = [
   {
     id: "the-finals-review",
     title: "THE FINALS — 모든 것을 파괴하는 쾌감과 게임성 심층 리뷰",
@@ -64,3 +66,87 @@ window.POSTS = [
     `,
   },
 ];
+
+// 통합 스토어 함수들
+window.BlogStore = {
+  STORAGE_KEY: "vanabv_custom_posts",
+  PASSCODE: "8771",
+
+  // 개발자 모드 인증 확인
+  isDevAuthenticated() {
+    return sessionStorage.getItem("vanabv_dev_auth") === "1" || localStorage.getItem("vanabv_dev_auth") === "1";
+  },
+
+  // 개발자 로그인
+  login(passcode, remember = true) {
+    if (passcode === this.PASSCODE) {
+      sessionStorage.setItem("vanabv_dev_auth", "1");
+      if (remember) localStorage.setItem("vanabv_dev_auth", "1");
+      return true;
+    }
+    return false;
+  },
+
+  // 개발자 로그아웃
+  logout() {
+    sessionStorage.removeItem("vanabv_dev_auth");
+    localStorage.removeItem("vanabv_dev_auth");
+  },
+
+  // 로컬에 저장된 사용자 작성 글 불러오기
+  getCustomPosts() {
+    try {
+      const data = localStorage.getItem(this.STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      console.error("Failed to load custom posts", e);
+      return [];
+    }
+  },
+
+  // 전체 글 (사용자 글 최신순 우선 + 기본 글)
+  getAllPosts() {
+    const custom = this.getCustomPosts();
+    // 중복 id 제거 (사용자가 기본 글을 수정 저장했을 수도 있음)
+    const customIds = new Set(custom.map(p => p.id));
+    const filteredDefaults = window.DEFAULT_POSTS.filter(p => !customIds.has(p.id));
+    return [...custom, ...filteredDefaults];
+  },
+
+  // 글 저장 (추가 또는 수정)
+  savePost(post) {
+    const custom = this.getCustomPosts();
+    const existingIndex = custom.findIndex(p => p.id === post.id);
+    if (existingIndex >= 0) {
+      custom[existingIndex] = post;
+    } else {
+      custom.unshift(post); // 최신글 맨 위로
+    }
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(custom));
+    window.POSTS = this.getAllPosts();
+    return true;
+  },
+
+  // 글 삭제
+  deletePost(id) {
+    let custom = this.getCustomPosts();
+    custom = custom.filter(p => p.id !== id);
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(custom));
+    window.POSTS = this.getAllPosts();
+    return true;
+  },
+
+  // GitHub 배포용 JS 코드 생성
+  generateExportCode() {
+    const all = this.getAllPosts();
+    return `/* =========================================================
+   vanaBV — GAME REVIEW BLOG POSTS & DATA STORE
+   최종 업데이트: ${new Date().toLocaleDateString("ko-KR")}
+   ========================================================= */
+window.DEFAULT_POSTS = ${JSON.stringify(all, null, 2)};
+`;
+  }
+};
+
+// 전역 POSTS 변수 초기화
+window.POSTS = window.BlogStore.getAllPosts();

@@ -191,48 +191,8 @@
           <a href="./blog/" class="btn-px px-frame">VIEW ALL REVIEWS →</a>
         </div>
 
-        <div class="projects-grid">
-          <article class="project-card px-frame px-shadow">
-            <header class="project-header">
-              <span class="project-title">THE FINALS</span>
-              <span class="project-status">★ 9.2</span>
-            </header>
-            <div class="project-body">
-              <div class="project-meta">2026.10.06 · Destruction FPS</div>
-              <p class="project-desc">
-                벽과 천장을 무너뜨려 동선을 실시간으로 바꾸는 파괴 메커니즘과 가상 게임쇼라는 독창적인 컨셉이 완벽하게 결합된 수작.
-              </p>
-              <div class="project-tags">
-                <span class="tag">FPS</span>
-                <span class="tag">Game Design</span>
-                <span class="tag">Physics</span>
-              </div>
-            </div>
-            <footer class="project-footer">
-              <button class="btn-px px-frame read-review-btn" type="button" data-review="2026-10-06-the-finals">[ READ REVIEW ]</button>
-            </footer>
-          </article>
-
-          <article class="project-card px-frame px-shadow">
-            <header class="project-header">
-              <span class="project-title">WALLRUNNING OBBY</span>
-              <span class="project-status">★ 8.5</span>
-            </header>
-            <div class="project-body">
-              <div class="project-meta">2025.05.21 · Roblox Postmortem</div>
-              <p class="project-desc">
-                로블록스 기본 점프맵의 한계를 넘어 벽 달리기(Wallrunning) 물리 판정을 구현하며 겪은 시행착오와 교훈.
-              </p>
-              <div class="project-tags">
-                <span class="tag">Roblox</span>
-                <span class="tag">Lua</span>
-                <span class="tag">Postmortem</span>
-              </div>
-            </div>
-            <footer class="project-footer">
-              <a href="./blog/" class="btn-px px-frame">[ READ ON BLOG ]</a>
-            </footer>
-          </article>
+        <div class="projects-grid" id="homepage-reviews-grid">
+          <!-- Dynamically populated from BlogStore (including Dev Mode custom posts) -->
         </div>
       </div>
     </section>
@@ -399,6 +359,7 @@
   <script src="./js/sprites.js"></script>
   <script src="./js/audio.js"></script>
   <script src="./js/game.js"></script>
+  <script src="./blog/posts.js"></script>
   <script src="./data/site.js"></script>
   <script src="./js/app.js"></script>
 </body>

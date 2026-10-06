@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../css/pixel.css">
   <style>
     .blog-header {
-      padding: 100px 0 40px;
+      padding: 90px 0 40px;
       border-bottom: 2px solid var(--accent);
       background: var(--dark-2);
     }
@@ -19,12 +19,12 @@
       gap: 8px;
       font-family: var(--font-pixel);
       font-size: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       text-decoration: none;
     }
     .blog-title {
       font-family: var(--font-pixel);
-      font-size: clamp(24px, 4vw, 36px);
+      font-size: clamp(22px, 4vw, 36px);
       letter-spacing: 4px;
       margin: 0 0 10px;
       color: var(--accent);
@@ -35,11 +35,34 @@
       margin: 0;
     }
 
+    /* Developer Mode Banner & Controls */
+    .dev-banner {
+      display: none;
+      margin-top: 24px;
+      padding: 16px 20px;
+      --bg: #151a14;
+      --bc: var(--grass-1);
+      border: 2px solid var(--grass-1);
+      background: rgba(42, 132, 24, 0.15);
+      animation: toast-in 0.3s steps(3);
+    }
+    .dev-banner.active { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; }
+    .dev-badge {
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--grass-0);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 2px;
+    }
+    .dev-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
     .blog-layout {
-      padding: 60px 0 100px;
+      padding: 50px 0 100px;
       display: grid;
       grid-template-columns: 1fr;
-      gap: 40px;
+      gap: 30px;
     }
 
     .post-card {
@@ -47,8 +70,8 @@
       padding: 24px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      cursor: pointer;
+      gap: 14px;
+      position: relative;
     }
     .post-card:hover {
       transform: translateY(-4px);
@@ -61,6 +84,8 @@
       font-family: var(--font-pixel);
       font-size: 9px;
       color: var(--accent);
+      flex-wrap: wrap;
+      gap: 8px;
     }
     .post-score-badge {
       background: var(--accent);
@@ -73,7 +98,9 @@
       font-weight: bold;
       margin: 0;
       color: #fff;
+      cursor: pointer;
     }
+    .post-h2:hover { color: var(--accent); }
     .post-subtitle {
       color: #88c8f0;
       font-size: 14px;
@@ -90,13 +117,21 @@
       gap: 8px;
       flex-wrap: wrap;
     }
+    .post-dev-bar {
+      display: none;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px dashed #333;
+      margin-top: 6px;
+    }
+    .dev-banner.active ~ main .post-dev-bar { display: flex; }
 
     /* Post Reader View */
     #reader-view {
       display: none;
       --bg: #0f1218;
       padding: 32px;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
     #reader-view.active { display: block; }
     .reader-back {
@@ -129,9 +164,71 @@
     }
     .reader-article ul { padding-left: 20px; }
     .reader-article li { margin-bottom: 8px; }
+
+    /* Modals & Forms */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+    .form-input, .form-textarea {
+      background: #080a0f;
+      border: 2px solid var(--line);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 14px;
+      padding: 10px 12px;
+      outline: none;
+    }
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--accent);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .tab-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .tab-btn {
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      padding: 6px 10px;
+      background: #111;
+      border: 1px solid var(--line);
+      color: #888;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+    .preview-box {
+      display: none;
+      background: #080a0f;
+      border: 2px solid var(--line);
+      padding: 16px;
+      min-height: 220px;
+      max-height: 380px;
+      overflow-y: auto;
+      line-height: 1.9;
+    }
+    .preview-box.active { display: block; }
   </style>
 </head>
 <body>
+  <!-- HUD Top Bar -->
   <div class="hud">
     <a href="../" class="hud-logo">
       <span class="hl">vanaBV</span>
@@ -140,6 +237,7 @@
     <nav class="hud-nav">
       <a href="../">← PORTFOLIO HOME</a>
     </nav>
+    <button id="hud-dev-btn" class="hud-credit" style="cursor: pointer;" type="button">[🔒 DEV MODE]</button>
   </div>
 
   <header class="blog-header">
@@ -147,13 +245,26 @@
       <a href="../" class="blog-nav-back">← RETURN TO HOME</a>
       <h1 class="blog-title">[ GAME REVIEW LOG ]</h1>
       <p class="blog-sub">게임을 플레이하고, 시스템을 분석하고, 기획적 관점으로 기록하는 나만의 블로그입니다.</p>
+
+      <!-- Developer Mode Active Banner -->
+      <div id="dev-banner" class="dev-banner px-frame">
+        <div class="dev-badge">
+          <span>●</span>
+          <span>DEVELOPER MODE ACTIVE [ GM: vanaBV ]</span>
+        </div>
+        <div class="dev-actions">
+          <button id="btn-open-writer" class="btn-px px-frame" style="--bg: var(--grass-2); color: #fff;" type="button">+ NEW REVIEW (새 글 작성)</button>
+          <button id="btn-export-code" class="btn-px px-frame" type="button">🚀 GITHUB EXPORT (코드 복사)</button>
+          <button id="btn-dev-logout" class="btn-px px-frame" style="--bg: #222;" type="button">LOGOUT</button>
+        </div>
+      </div>
     </div>
   </header>
 
   <main class="container blog-layout">
     <!-- Active Article Reader -->
     <div id="reader-view" class="px-frame px-shadow">
-      <button class="reader-back" id="btn-close-reader">← LIST POSTS</button>
+      <button class="reader-back" id="btn-close-reader">← LIST POSTS (목록으로)</button>
       <div class="post-meta-row" style="margin-bottom: 12px;">
         <span id="reader-meta">DATE · GAME</span>
         <span class="post-score-badge" id="reader-score">SCORE 9.2</span>
@@ -165,61 +276,472 @@
 
     <!-- Posts Grid -->
     <div id="posts-container" style="display: grid; gap: 24px;">
-      <!-- Populated via posts.js -->
+      <!-- Populated dynamically via posts.js -->
     </div>
   </main>
 
   <footer class="footer-bar">
-    vanaBV REVIEW ARCHIVE · POWERED BY GITHUB PAGES · <a href="../">PORTFOLIO</a>
+    vanaBV REVIEW ARCHIVE · POWERED BY GITHUB PAGES · <a href="../">PORTFOLIO HOME</a>
   </footer>
 
+  <!-- =========================================================
+       MODALS: DEV AUTH / WRITE POST / EXPORT CODE
+       ========================================================= -->
+
+  <!-- 1. Passcode Authentication Modal (비밀번호: 8771) -->
+  <dialog class="win" id="win-auth" aria-labelledby="auth-title">
+    <div class="win-inner px-frame" style="max-width: 400px;">
+      <div class="win-title" id="auth-title">
+        <span>[🔑 DEVELOPER AUTH]</span>
+        <span class="key">ESC</span>
+        <button class="win-close" type="button" aria-label="Close">X</button>
+      </div>
+      <form id="auth-form" class="win-body" style="padding: 24px;">
+        <p style="margin: 0 0 16px; font-size: 13px; color: #ccc;">
+          블로그 글 작성 및 관리 권한을 인증합니다.<br>
+          <span style="color: var(--accent); font-family: var(--font-pixel); font-size: 9px;">개발자 비밀번호를 입력하세요.</span>
+        </p>
+
+        <div class="form-group">
+          <label for="auth-input">PASSCODE</label>
+          <input type="password" id="auth-input" class="form-input" placeholder="비밀번호 입력..." autocomplete="off" required>
+        </div>
+
+        <div id="auth-error" style="display: none; color: var(--red); font-family: var(--font-pixel); font-size: 8px; margin-bottom: 12px;">
+          ❌ PASSCODE INCORRECT!
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
+          <button type="button" class="btn-px" id="btn-cancel-auth">CANCEL</button>
+          <button type="submit" class="btn-px" style="--bg: var(--accent); color: #000;">UNLOCK (확인)</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- 2. Post Writer / Editor Modal -->
+  <dialog class="win" id="win-editor" aria-labelledby="editor-title" style="width: min(720px, calc(100vw - 20px));">
+    <div class="win-inner px-frame">
+      <div class="win-title" id="editor-title">
+        <span id="editor-heading">[✍️ WRITE NEW GAME REVIEW]</span>
+        <span class="key">ESC</span>
+        <button class="win-close" type="button" aria-label="Close">X</button>
+      </div>
+
+      <form id="editor-form" class="win-body" style="padding: 20px; max-height: 80vh; overflow-y: auto;">
+        <input type="hidden" id="edit-post-id" value="">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-game">게임 이름 (GAME TITLE) *</label>
+            <input type="text" id="f-game" class="form-input" placeholder="예: THE FINALS, 스텔라 블레이드" required>
+          </div>
+          <div class="form-group">
+            <label for="f-dev">개발사 (DEVELOPER)</label>
+            <input type="text" id="f-dev" class="form-input" placeholder="예: Embark Studios">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="f-title">리뷰 제목 (REVIEW TITLE) *</label>
+          <input type="text" id="f-title" class="form-input" placeholder="예: 모든 것을 파괴하는 쾌감과 게임성 심층 분석" required>
+        </div>
+
+        <div class="form-group">
+          <label for="f-subtitle">부제목 (SUBTITLE)</label>
+          <input type="text" id="f-subtitle" class="form-input" placeholder="예: 전통적인 하이퍼 FPS의 공식을 부수고 세운 아레나">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-genre">장르 (GENRE)</label>
+            <input type="text" id="f-genre" class="form-input" placeholder="예: Tactical FPS / Parkour">
+          </div>
+          <div class="form-group">
+            <label for="f-platform">플랫폼 (PLATFORM)</label>
+            <input type="text" id="f-platform" class="form-input" placeholder="예: PC (Steam) / Roblox">
+          </div>
+          <div class="form-group">
+            <label for="f-score">평점 (SCORE, 1~10)</label>
+            <input type="number" id="f-score" class="form-input" step="0.1" min="1" max="10" placeholder="9.5" value="9.0">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-badge">배지 (BADGE)</label>
+            <select id="f-badge" class="form-input">
+              <option value="RECOMMENDED">RECOMMENDED (추천)</option>
+              <option value="MASTERPIECE">MASTERPIECE (명작)</option>
+              <option value="MY PROJECT">MY PROJECT (자작 프로젝트)</option>
+              <option value="POSTMORTEM">POSTMORTEM (회고)</option>
+              <option value="HONEST REVIEW">HONEST REVIEW (솔직 리뷰)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-tags">태그 (TAGS, 쉼표 구분)</label>
+            <input type="text" id="f-tags" class="form-input" placeholder="FPS, Level Design, Physics">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="f-summary">한 줄 요약 (SUMMARY)</label>
+          <textarea id="f-summary" class="form-textarea" rows="2" placeholder="게임의 핵심 매력이나 한 줄 감상을 적어주세요."></textarea>
+        </div>
+
+        <!-- Content with Markdown/HTML & Live Preview -->
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label for="f-content">본문 내용 (REVIEW CONTENT) *</label>
+            <div class="tab-bar">
+              <button type="button" class="tab-btn active" id="tab-btn-write">EDITOR</button>
+              <button type="button" class="tab-btn" id="tab-btn-prev">PREVIEW (미리보기)</button>
+            </div>
+          </div>
+
+          <textarea id="f-content" class="form-textarea" rows="10" placeholder="자유롭게 작성하세요! 일반 텍스트, Markdown(## 소제목, **볼드**, - 목록), 또는 HTML 태그(<p>, <h2> 등)를 모두 지원합니다." required></textarea>
+          <div id="editor-preview" class="preview-box"></div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 14px; border-top: 1px solid var(--line); padding-top: 16px;">
+          <button type="button" class="btn-px" id="btn-cancel-edit">취소</button>
+          <button type="submit" class="btn-px" style="--bg: var(--accent); color: #000; font-weight: bold;">[💾 사이트에 즉시 발행]</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- 3. Export Code Modal (GitHub 배포 가이드) -->
+  <dialog class="win" id="win-export" aria-labelledby="export-title" style="width: min(650px, calc(100vw - 20px));">
+    <div class="win-inner px-frame">
+      <div class="win-title" id="export-title">
+        <span>[🚀 GITHUB 영구 배포 코드]</span>
+        <span class="key">ESC</span>
+        <button class="win-close" type="button" aria-label="Close">X</button>
+      </div>
+
+      <div class="win-body" style="padding: 20px;">
+        <p style="font-size: 13px; color: #ccc; margin: 0 0 12px; line-height: 1.7;">
+          브라우저에서 작성한 글은 <b>내 기기에는 즉시 저장</b>되어 보입니다.<br>
+          전 세계 모든 방문자에게도 영구 공개되도록 GitHub에 커밋하려면 아래 코드를 복사해서 <code style="color: var(--accent);">blog/posts.js</code>에 붙여넣기만 하면 됩니다!
+        </p>
+
+        <textarea id="export-code-box" class="form-textarea" rows="10" style="font-size: 11px; font-family: monospace; width: 100%; white-space: pre;" readonly></textarea>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 10px;">
+          <span id="copy-status" style="font-family: var(--font-pixel); font-size: 8px; color: var(--grass-0); display: none;">✅ 클립보드에 복사되었습니다!</span>
+          <div style="display: flex; gap: 10px; margin-left: auto;">
+            <button type="button" class="btn-px" id="btn-copy-code" style="--bg: var(--accent); color: #000;">[📋 코드 전체 복사]</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Toast Notification Stack -->
+  <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
+
+  <!-- Scripts -->
   <script src="./posts.js"></script>
   <script>
-    const container = document.getElementById("posts-container");
-    const reader = document.getElementById("reader-view");
-    const closeReaderBtn = document.getElementById("btn-close-reader");
+    // Elements
+    const hudDevBtn = document.getElementById("hud-dev-btn");
+    const devBanner = document.getElementById("dev-banner");
+    const btnDevLogout = document.getElementById("btn-dev-logout");
+    const btnOpenWriter = document.getElementById("btn-open-writer");
+    const btnExportCode = document.getElementById("btn-export-code");
 
+    const winAuth = document.getElementById("win-auth");
+    const authForm = document.getElementById("auth-form");
+    const authInput = document.getElementById("auth-input");
+    const authError = document.getElementById("auth-error");
+    const btnCancelAuth = document.getElementById("btn-cancel-auth");
+
+    const winEditor = document.getElementById("win-editor");
+    const editorForm = document.getElementById("editor-form");
+    const editorHeading = document.getElementById("editor-heading");
+    const btnCancelEdit = document.getElementById("btn-cancel-edit");
+    const tabBtnWrite = document.getElementById("tab-btn-write");
+    const tabBtnPrev = document.getElementById("tab-btn-prev");
+    const fContent = document.getElementById("f-content");
+    const editorPreview = document.getElementById("editor-preview");
+
+    const winExport = document.getElementById("win-export");
+    const exportCodeBox = document.getElementById("export-code-box");
+    const btnCopyCode = document.getElementById("btn-copy-code");
+    const copyStatus = document.getElementById("copy-status");
+
+    const postsContainer = document.getElementById("posts-container");
+    const readerView = document.getElementById("reader-view");
+    const btnCloseReader = document.getElementById("btn-close-reader");
+
+    // Toast
+    function showToast(msg) {
+      const stack = document.getElementById("toast-stack");
+      if (!stack) return;
+      const t = document.createElement("div");
+      t.className = "toast px-frame";
+      t.textContent = msg;
+      stack.appendChild(t);
+      setTimeout(() => { if (t.parentNode) t.parentNode.removeChild(t); }, 2500);
+    }
+
+    // Markdown Parser
+    function parseToHtml(text) {
+      if (!text) return "";
+      // If already contains rich html tags, preserve them
+      if (text.includes("<h2>") || text.includes("<p>")) return text;
+
+      let html = text
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        .replace(/\*\*(.*?)\*\*/gim, '<b>$1</b>')
+        .replace(/\*(.*?)\*/gim, '<i>$1</i>')
+        .replace(/^- (.*$)/gim, '<li>$1</li>');
+
+      html = html.replace(/(<li>.*?<\/li>(\s*<li>.*?<\/li>)*)/gim, '<ul>$1</ul>');
+
+      return html.split('\n\n').map(p => {
+        p = p.trim();
+        if (!p) return "";
+        if (p.startsWith('<h') || p.startsWith('<ul') || p.startsWith('<div')) return p;
+        return `<p>${p.replace(/\n/g, '<br>')}</p>`;
+      }).join('');
+    }
+
+    // Render Posts
     function renderPosts() {
-      if (!window.POSTS || !container) return;
+      const posts = window.BlogStore.getAllPosts();
+      const isDev = window.BlogStore.isDevAuthenticated();
 
-      container.innerHTML = window.POSTS.map(p => `
-        <article class="post-card px-frame px-shadow" onclick="openPost('${p.id}')">
+      if (posts.length === 0) {
+        postsContainer.innerHTML = '<div style="text-align: center; color: #888; padding: 40px;">등록된 리뷰가 없습니다.</div>';
+        return;
+      }
+
+      postsContainer.innerHTML = posts.map(p => `
+        <article class="post-card px-frame px-shadow" id="card-${p.id}">
           <div class="post-meta-row">
-            <span>${p.date} · ${p.genre}</span>
-            <span class="post-score-badge">★ ${p.score}</span>
+            <span>${p.date} · [ ${p.game} ] · ${p.genre || ''}</span>
+            <span class="post-score-badge">★ ${p.score || '—'}</span>
           </div>
-          <h2 class="post-h2">${p.title}</h2>
-          <p class="post-subtitle">${p.subtitle}</p>
-          <p class="post-summary">${p.summary}</p>
+          <h2 class="post-h2" onclick="openPost('${p.id}')">${p.title}</h2>
+          ${p.subtitle ? `<p class="post-subtitle">${p.subtitle}</p>` : ''}
+          <p class="post-summary">${p.summary || ''}</p>
           <div class="post-tags">
-            ${p.tags.map(t => `<span class="tag">${t}</span>`).join(" ")}
+            ${(p.tags || []).map(t => `<span class="tag">${t}</span>`).join(" ")}
+          </div>
+          <div class="post-dev-bar" style="${isDev ? 'display:flex;' : 'display:none;'}">
+            <button class="btn-px" type="button" onclick="editPost('${p.id}')" style="font-size: 8px; padding: 4px 8px;">[✏️ EDIT / 수정]</button>
+            <button class="btn-px" type="button" onclick="deletePost('${p.id}')" style="font-size: 8px; padding: 4px 8px; --bg: var(--red); color:#fff;">[🗑️ DELETE / 삭제]</button>
           </div>
         </article>
       `).join("");
     }
 
+    // Open Post Detail
     function openPost(id) {
-      const p = window.POSTS.find(x => x.id === id);
+      const posts = window.BlogStore.getAllPosts();
+      const p = posts.find(x => x.id === id);
       if (!p) return;
 
       document.getElementById("reader-title").textContent = p.title;
-      document.getElementById("reader-subtitle").textContent = p.subtitle;
-      document.getElementById("reader-meta").textContent = `${p.date} · [ ${p.game} ] · DEV: ${p.developer}`;
+      document.getElementById("reader-subtitle").textContent = p.subtitle || "";
+      document.getElementById("reader-meta").textContent = `${p.date} · [ ${p.game} ] · DEV: ${p.developer || '—'}`;
       document.getElementById("reader-score").textContent = `SCORE: ${p.score} / 10`;
-      document.getElementById("reader-content").innerHTML = p.content;
+      document.getElementById("reader-content").innerHTML = parseToHtml(p.content);
 
-      reader.classList.add("active");
-      container.style.display = "none";
-      window.scrollTo({ top: reader.offsetTop - 80, behavior: "smooth" });
+      readerView.classList.add("active");
+      postsContainer.style.display = "none";
+      window.scrollTo({ top: readerView.offsetTop - 80, behavior: "smooth" });
     }
 
-    closeReaderBtn.addEventListener("click", () => {
-      reader.classList.remove("active");
-      container.style.display = "grid";
+    btnCloseReader.addEventListener("click", () => {
+      readerView.classList.remove("active");
+      postsContainer.style.display = "grid";
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
-    renderPosts();
+    // Update Dev UI status
+    function updateDevStatus() {
+      const isDev = window.BlogStore.isDevAuthenticated();
+      if (isDev) {
+        devBanner.classList.add("active");
+        hudDevBtn.textContent = "[🔓 DEV: vanaBV]";
+        hudDevBtn.style.color = "var(--grass-0)";
+        hudDevBtn.style.borderColor = "var(--grass-1)";
+      } else {
+        devBanner.classList.remove("active");
+        hudDevBtn.textContent = "[🔒 DEV MODE]";
+        hudDevBtn.style.color = "var(--accent)";
+        hudDevBtn.style.borderColor = "var(--accent-dim)";
+      }
+      renderPosts();
+    }
+
+    // Dev Auth Interactions
+    hudDevBtn.addEventListener("click", () => {
+      if (window.BlogStore.isDevAuthenticated()) {
+        showToast("🔓 DEVELOPER MODE ALREADY ACTIVE");
+        devBanner.scrollIntoView({ behavior: "smooth" });
+      } else {
+        authInput.value = "";
+        authError.style.display = "none";
+        winAuth.showModal();
+        authInput.focus();
+      }
+    });
+
+    btnCancelAuth.addEventListener("click", () => winAuth.close());
+
+    authForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const pwd = authInput.value.trim();
+      if (window.BlogStore.login(pwd)) {
+        winAuth.close();
+        updateDevStatus();
+        showToast("🎉 DEVELOPER ACCESS GRANTED! (환영합니다)");
+      } else {
+        authError.style.display = "block";
+        authInput.value = "";
+        authInput.focus();
+      }
+    });
+
+    btnDevLogout.addEventListener("click", () => {
+      window.BlogStore.logout();
+      updateDevStatus();
+      showToast("🔒 DEVELOPER LOGGED OUT");
+    });
+
+    // Editor Interactions
+    btnOpenWriter.addEventListener("click", () => {
+      document.getElementById("edit-post-id").value = "";
+      editorHeading.textContent = "[✍️ WRITE NEW GAME REVIEW]";
+      editorForm.reset();
+      tabBtnWrite.click();
+      winEditor.showModal();
+    });
+
+    btnCancelEdit.addEventListener("click", () => winEditor.close());
+
+    // Tabs in editor
+    tabBtnWrite.addEventListener("click", () => {
+      tabBtnWrite.classList.add("active");
+      tabBtnPrev.classList.remove("active");
+      fContent.style.display = "block";
+      editorPreview.classList.remove("active");
+    });
+    tabBtnPrev.addEventListener("click", () => {
+      tabBtnPrev.classList.add("active");
+      tabBtnWrite.classList.remove("active");
+      fContent.style.display = "none";
+      editorPreview.classList.add("active");
+      editorPreview.innerHTML = parseToHtml(fContent.value);
+    });
+
+    // Save Post Form Submit
+    editorForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const id = document.getElementById("edit-post-id").value || `review-${Date.now()}`;
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
+
+      const tags = document.getElementById("f-tags").value
+        .split(",")
+        .map(t => t.trim())
+        .filter(t => t.length > 0);
+
+      const postObj = {
+        id: id,
+        game: document.getElementById("f-game").value.trim(),
+        developer: document.getElementById("f-dev").value.trim(),
+        title: document.getElementById("f-title").value.trim(),
+        subtitle: document.getElementById("f-subtitle").value.trim(),
+        genre: document.getElementById("f-genre").value.trim(),
+        platform: document.getElementById("f-platform").value.trim(),
+        score: parseFloat(document.getElementById("f-score").value) || 9.0,
+        badge: document.getElementById("f-badge").value,
+        tags: tags,
+        summary: document.getElementById("f-summary").value.trim(),
+        content: parseToHtml(fContent.value.trim()),
+        date: dateStr,
+      };
+
+      window.BlogStore.savePost(postObj);
+      winEditor.close();
+      renderPosts();
+      showToast("✅ 새 게임 리뷰가 등록되었습니다!");
+    });
+
+    // Edit Post
+    window.editPost = function(id) {
+      const posts = window.BlogStore.getAllPosts();
+      const p = posts.find(x => x.id === id);
+      if (!p) return;
+
+      document.getElementById("edit-post-id").value = p.id;
+      editorHeading.textContent = `[✏️ EDIT: ${p.game}]`;
+      document.getElementById("f-game").value = p.game || "";
+      document.getElementById("f-dev").value = p.developer || "";
+      document.getElementById("f-title").value = p.title || "";
+      document.getElementById("f-subtitle").value = p.subtitle || "";
+      document.getElementById("f-genre").value = p.genre || "";
+      document.getElementById("f-platform").value = p.platform || "";
+      document.getElementById("f-score").value = p.score || 9.0;
+      document.getElementById("f-badge").value = p.badge || "RECOMMENDED";
+      document.getElementById("f-tags").value = (p.tags || []).join(", ");
+      document.getElementById("f-summary").value = p.summary || "";
+      fContent.value = p.content || "";
+
+      tabBtnWrite.click();
+      winEditor.showModal();
+    };
+
+    // Delete Post
+    window.deletePost = function(id) {
+      if (confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
+        window.BlogStore.deletePost(id);
+        renderPosts();
+        showToast("🗑️ 리뷰가 삭제되었습니다.");
+      }
+    };
+
+    // Export Code
+    btnExportCode.addEventListener("click", () => {
+      const code = window.BlogStore.generateExportCode();
+      exportCodeBox.value = code;
+      copyStatus.style.display = "none";
+      winExport.showModal();
+    });
+
+    btnCopyCode.addEventListener("click", () => {
+      exportCodeBox.select();
+      navigator.clipboard.writeText(exportCodeBox.value).then(() => {
+        copyStatus.style.display = "inline";
+        showToast("📋 배포 코드가 복사되었습니다!");
+      });
+    });
+
+    // Setup generic modal close handlers
+    document.querySelectorAll(".win-close").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const d = btn.closest("dialog");
+        if (d) d.close();
+      });
+    });
+
+    // Hotkey: Ctrl+Shift+D or F2 triggers Dev Mode login
+    window.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey && e.shiftKey && e.code === "KeyD") || e.key === "F2") {
+        e.preventDefault();
+        hudDevBtn.click();
+      }
+    });
+
+    // Init
+    updateDevStatus();
   </script>
 </body>
 </html>
