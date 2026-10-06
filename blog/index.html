@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vanaBV // GAME REVIEW LOG</title>
+  <meta name="description" content="게임 개발자 안서진(vanaBV)의 게임 리뷰 & 분석 아카이브 블로그">
+
+  <link rel="stylesheet" href="../css/pixel.css">
+  <style>
+    .blog-header {
+      padding: 100px 0 40px;
+      border-bottom: 2px solid var(--accent);
+      background: var(--dark-2);
+    }
+    .blog-nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      margin-bottom: 20px;
+      text-decoration: none;
+    }
+    .blog-title {
+      font-family: var(--font-pixel);
+      font-size: clamp(24px, 4vw, 36px);
+      letter-spacing: 4px;
+      margin: 0 0 10px;
+      color: var(--accent);
+    }
+    .blog-sub {
+      color: #aaa;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .blog-layout {
+      padding: 60px 0 100px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .post-card {
+      --bg: #11141c;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      cursor: pointer;
+    }
+    .post-card:hover {
+      transform: translateY(-4px);
+      filter: drop-shadow(8px 8px 0 var(--accent));
+    }
+    .post-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-pixel);
+      font-size: 9px;
+      color: var(--accent);
+    }
+    .post-score-badge {
+      background: var(--accent);
+      color: var(--dark);
+      padding: 4px 8px;
+      font-weight: bold;
+    }
+    .post-h2 {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0;
+      color: #fff;
+    }
+    .post-subtitle {
+      color: #88c8f0;
+      font-size: 14px;
+      margin: 0;
+    }
+    .post-summary {
+      color: #ccc;
+      font-size: 14px;
+      line-height: 1.7;
+      margin: 0;
+    }
+    .post-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Post Reader View */
+    #reader-view {
+      display: none;
+      --bg: #0f1218;
+      padding: 32px;
+      margin-bottom: 40px;
+    }
+    #reader-view.active { display: block; }
+    .reader-back {
+      display: inline-block;
+      margin-bottom: 24px;
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--accent);
+      background: none;
+      border: 1px solid var(--accent);
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+    .reader-article {
+      line-height: 2;
+      font-size: 16px;
+      color: #e0e0e0;
+    }
+    .reader-article h2 {
+      color: var(--accent);
+      border-bottom: 2px dashed #333;
+      padding-bottom: 8px;
+      margin-top: 36px;
+      font-size: 20px;
+    }
+    .reader-article h3 {
+      color: #88c8f0;
+      margin-top: 24px;
+      font-size: 17px;
+    }
+    .reader-article ul { padding-left: 20px; }
+    .reader-article li { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="hud">
+    <a href="../" class="hud-logo">
+      <span class="hl">vanaBV</span>
+      <span style="opacity: 0.6;">// BLOG</span>
+    </a>
+    <nav class="hud-nav">
+      <a href="../">← PORTFOLIO HOME</a>
+    </nav>
+  </div>
+
+  <header class="blog-header">
+    <div class="container">
+      <a href="../" class="blog-nav-back">← RETURN TO HOME</a>
+      <h1 class="blog-title">[ GAME REVIEW LOG ]</h1>
+      <p class="blog-sub">게임을 플레이하고, 시스템을 분석하고, 기획적 관점으로 기록하는 나만의 블로그입니다.</p>
+    </div>
+  </header>
+
+  <main class="container blog-layout">
+    <!-- Active Article Reader -->
+    <div id="reader-view" class="px-frame px-shadow">
+      <button class="reader-back" id="btn-close-reader">← LIST POSTS</button>
+      <div class="post-meta-row" style="margin-bottom: 12px;">
+        <span id="reader-meta">DATE · GAME</span>
+        <span class="post-score-badge" id="reader-score">SCORE 9.2</span>
+      </div>
+      <h1 id="reader-title" style="margin: 0 0 8px; font-size: clamp(22px, 3.5vw, 32px); color: #fff;">TITLE</h1>
+      <p id="reader-subtitle" style="color: #88c8f0; font-size: 16px; margin: 0 0 24px;">SUBTITLE</p>
+      <div class="reader-article" id="reader-content">CONTENT</div>
+    </div>
+
+    <!-- Posts Grid -->
+    <div id="posts-container" style="display: grid; gap: 24px;">
+      <!-- Populated via posts.js -->
+    </div>
+  </main>
+
+  <footer class="footer-bar">
+    vanaBV REVIEW ARCHIVE · POWERED BY GITHUB PAGES · <a href="../">PORTFOLIO</a>
+  </footer>
+
+  <script src="./posts.js"></script>
+  <script>
+    const container = document.getElementById("posts-container");
+    const reader = document.getElementById("reader-view");
+    const closeReaderBtn = document.getElementById("btn-close-reader");
+
+    function renderPosts() {
+      if (!window.POSTS || !container) return;
+
+      container.innerHTML = window.POSTS.map(p => `
+        <article class="post-card px-frame px-shadow" onclick="openPost('${p.id}')">
+          <div class="post-meta-row">
+            <span>${p.date} · ${p.genre}</span>
+            <span class="post-score-badge">★ ${p.score}</span>
+          </div>
+          <h2 class="post-h2">${p.title}</h2>
+          <p class="post-subtitle">${p.subtitle}</p>
+          <p class="post-summary">${p.summary}</p>
+          <div class="post-tags">
+            ${p.tags.map(t => `<span class="tag">${t}</span>`).join(" ")}
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function openPost(id) {
+      const p = window.POSTS.find(x => x.id === id);
+      if (!p) return;
+
+      document.getElementById("reader-title").textContent = p.title;
+      document.getElementById("reader-subtitle").textContent = p.subtitle;
+      document.getElementById("reader-meta").textContent = `${p.date} · [ ${p.game} ] · DEV: ${p.developer}`;
+      document.getElementById("reader-score").textContent = `SCORE: ${p.score} / 10`;
+      document.getElementById("reader-content").innerHTML = p.content;
+
+      reader.classList.add("active");
+      container.style.display = "none";
+      window.scrollTo({ top: reader.offsetTop - 80, behavior: "smooth" });
+    }
+
+    closeReaderBtn.addEventListener("click", () => {
+      reader.classList.remove("active");
+      container.style.display = "grid";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    renderPosts();
+  </script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vanaBV // Game Developer Portfolio</title>
+  <meta name="description" content="안서진(vanaBV) 포트폴리오 — 로블록스 택티컬 FPS XRUNNERS 개발자, 게임 기획 & 3D 뷰모델 제작.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>👾</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="./css/pixel.css">
+  <link rel="stylesheet" href="./css/home.css">
+</head>
+<body>
+  <a href="#about" class="skip-link">[ SKIP TO CONTENT ]</a>
+
+  <!-- Toast Notification Stack -->
+  <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
+
+  <!-- HUD Top Bar -->
+  <header class="hud" role="banner">
+    <a href="#" class="hud-logo">
+      <span data-sprite="mushroom" data-scale="2"></span>
+      <span class="hl">vanaBV</span>
+      <span style="opacity: 0.5;">LV.26</span>
+    </a>
+
+    <nav class="hud-nav" aria-label="Main Navigation">
+      <a href="#about">ABOUT</a>
+      <a href="#projects">PROJECTS</a>
+      <a href="#skills">SKILLS</a>
+      <a href="#archive">ARCHIVE</a>
+      <a href="#reviews">REVIEWS</a>
+      <a href="./blog/">BLOG</a>
+      <a href="#contact">CONTACT</a>
+    </nav>
+
+    <div id="hud-credit" class="hud-credit" title="Click PLAY NOW button to insert coin">CREDIT: 00/10</div>
+    <button id="hud-mute" class="hud-mute" type="button" aria-label="Toggle Sound">SOUND: ON</button>
+  </header>
+
+  <main>
+    <!-- 1. HERO SECTION -->
+    <section class="hero" id="hero">
+      <div class="pixel-sun" aria-hidden="true"></div>
+      <div class="pixel-cloud c1" aria-hidden="true"></div>
+      <div class="pixel-cloud c2" aria-hidden="true"></div>
+
+      <div class="hero-center">
+        <h1 class="hero-name">vanaBV</h1>
+        <div class="hero-subtitle">
+          <span id="hero-role">GAME DEVELOPER</span>
+          <span class="hero-cursor" aria-hidden="true"></span>
+        </div>
+
+        <div class="hero-actions">
+          <a href="#arcade" id="hero-cta" class="btn-glitch-fill on-sky px-frame px-shadow" data-hover="INSERT COIN">
+            <span class="text">Play now</span>
+            <span class="text-decoration"></span>
+            <span class="decoration"></span>
+          </a>
+          <span class="hero-hint px-frame">INSERT COIN x 10 TO UNLOCK ARCADE</span>
+        </div>
+      </div>
+
+      <!-- MapleStory Layered Ground Strips -->
+      <div class="grass-tufts" aria-hidden="true"></div>
+      <div class="hero-ground" aria-hidden="true">
+        <div class="ground-strip s1"></div>
+        <div class="ground-strip s2"></div>
+        <div class="ground-strip s3"></div>
+        <div class="ground-strip s4"></div>
+      </div>
+    </section>
+
+    <!-- 2. ABOUT SECTION -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="label">[ ABOUT ]</div>
+        <h2 class="section-title">PLAYER <span class="hl">PROFILE</span></h2>
+
+        <div class="about-grid">
+          <!-- 8-Bit Stat Card -->
+          <div class="stat-card px-frame px-shadow">
+            <div class="stat-card-header">
+              <span data-sprite="hero" data-scale="2"></span>
+              <div>
+                <div class="stat-card-title">CHARACTER SHEET</div>
+                <div style="font-size: 8px; color: var(--muted); font-family: var(--font-pixel);">NO. 151477834</div>
+              </div>
+            </div>
+
+            <div class="stat-rows" id="about-stats">
+              <!-- Rendered via site.js -->
+            </div>
+
+            <div class="stat-exp-wrap">
+              <div class="stat-exp-header">
+                <span>EXPERIENCE</span>
+                <span id="about-exp-text">EXP 72%</span>
+              </div>
+              <div class="stat-exp-bar">
+                <div class="stat-exp-fill" id="about-exp-fill" style="width: 72%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monospace Bio -->
+          <div class="about-bio" id="about-bio">
+            <!-- Rendered via site.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. PROJECTS SECTION -->
+    <section class="section alt-bg" id="projects">
+      <div class="container">
+        <div class="label">[ PROJECTS ]</div>
+        <h2 class="section-title">FEATURED <span class="hl">WORKS</span></h2>
+
+        <div class="projects-grid" id="projects-grid">
+          <!-- Rendered via site.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. SKILLS SECTION -->
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="label">[ SKILLS ]</div>
+        <h2 class="section-title">ABILITY <span class="hl">STATS</span></h2>
+
+        <div class="skills-list" id="skills-list">
+          <!-- Rendered via site.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. ARCHIVE & MY ROOM SECTION -->
+    <section class="section alt-bg" id="archive">
+      <div class="container archive-room">
+        <div class="label">[ ARCHIVE & MY ROOM ]</div>
+        <h2 class="section-title">PERSONAL <span class="hl">DATABASE</span></h2>
+        <p style="color: #aaa; max-width: 600px; margin: 0 auto 30px;">
+          취미(경마, 게임, 음악), 3D 모델링 작업물, 플레이한 게임과 활동 기록을 모아둔 창입니다. 창 제목을 드래그해서 움직일 수 있어요!
+        </p>
+
+        <div class="archive-buttons">
+          <button class="room-btn px-frame px-shadow" type="button" data-open-win="win-hobbies">
+            <span data-sprite="heart" data-scale="2"></span>
+            <span>[H] HOBBIES (취미)</span>
+          </button>
+
+          <button class="room-btn px-frame px-shadow" type="button" data-open-win="win-inventory">
+            <span data-sprite="bag" data-scale="2"></span>
+            <span>[I] INVENTORY (게임)</span>
+          </button>
+
+          <button class="room-btn px-frame px-shadow" type="button" data-open-win="win-gallery">
+            <span data-sprite="frame" data-scale="2"></span>
+            <span>[G] GALLERY (3D/Blender)</span>
+          </button>
+
+          <button class="room-btn px-frame px-shadow" type="button" data-open-win="win-album">
+            <span data-sprite="camera" data-scale="2"></span>
+            <span>[A] ALBUM (스크린샷)</span>
+          </button>
+
+          <button class="room-btn px-frame px-shadow" type="button" data-open-win="win-quests">
+            <span data-sprite="scroll" data-scale="2"></span>
+            <span>[Q] QUESTS (활동기록)</span>
+          </button>
+
+          <button class="room-btn px-frame px-shadow" type="button" id="btn-launch-arcade" style="border-color: var(--cyan);">
+            <span data-sprite="ship" data-scale="2"></span>
+            <span>[👾] ARCADE (슈팅게임)</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. GAME REVIEWS (BLOG PREVIEW) -->
+    <section class="section" id="reviews">
+      <div class="container">
+        <div class="label">[ BLOG & LOGS ]</div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 30px;">
+          <h2 class="section-title" style="margin: 0;">GAME <span class="hl">REVIEWS</span></h2>
+          <a href="./blog/" class="btn-px px-frame">VIEW ALL REVIEWS →</a>
+        </div>
+
+        <div class="projects-grid">
+          <article class="project-card px-frame px-shadow">
+            <header class="project-header">
+              <span class="project-title">THE FINALS</span>
+              <span class="project-status">★ 9.2</span>
+            </header>
+            <div class="project-body">
+              <div class="project-meta">2026.10.06 · Destruction FPS</div>
+              <p class="project-desc">
+                벽과 천장을 무너뜨려 동선을 실시간으로 바꾸는 파괴 메커니즘과 가상 게임쇼라는 독창적인 컨셉이 완벽하게 결합된 수작.
+              </p>
+              <div class="project-tags">
+                <span class="tag">FPS</span>
+                <span class="tag">Game Design</span>
+                <span class="tag">Physics</span>
+              </div>
+            </div>
+            <footer class="project-footer">
+              <button class="btn-px px-frame read-review-btn" type="button" data-review="2026-10-06-the-finals">[ READ REVIEW ]</button>
+            </footer>
+          </article>
+
+          <article class="project-card px-frame px-shadow">
+            <header class="project-header">
+              <span class="project-title">WALLRUNNING OBBY</span>
+              <span class="project-status">★ 8.5</span>
+            </header>
+            <div class="project-body">
+              <div class="project-meta">2025.05.21 · Roblox Postmortem</div>
+              <p class="project-desc">
+                로블록스 기본 점프맵의 한계를 넘어 벽 달리기(Wallrunning) 물리 판정을 구현하며 겪은 시행착오와 교훈.
+              </p>
+              <div class="project-tags">
+                <span class="tag">Roblox</span>
+                <span class="tag">Lua</span>
+                <span class="tag">Postmortem</span>
+              </div>
+            </div>
+            <footer class="project-footer">
+              <a href="./blog/" class="btn-px px-frame">[ READ ON BLOG ]</a>
+            </footer>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CONTACT / FOOTER HERO -->
+    <section class="footer-hero" id="contact">
+      <div class="container footer-center">
+        <div class="label" style="color: #0b1a0b;">[ GAME OVER? ]</div>
+        <h2 class="section-title" style="color: #ffffff; text-shadow: 2px 2px 0 var(--ink);">CONTINUE? <span class="hl">9... 8...</span></h2>
+        <p style="color: #1a3a1a; font-weight: bold; margin: 0 auto; max-width: 500px;">
+          DROP A MESSAGE OR CONNECT VIA SOCIALS!
+        </p>
+
+        <div class="contact-links" id="contact-links">
+          <!-- Rendered via site.js -->
+        </div>
+      </div>
+
+      <!-- Mirrored Ground -->
+      <div class="grass-tufts" style="top: 0; bottom: auto;" aria-hidden="true"></div>
+      <div class="hero-ground" style="top: 0; bottom: auto; transform: scaleY(-1);" aria-hidden="true">
+        <div class="ground-strip s1"></div>
+        <div class="ground-strip s2"></div>
+        <div class="ground-strip s3"></div>
+        <div class="ground-strip s4"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-bar">
+    vanaBV PORTFOLIO & ARCHIVE · DESIGNED IN RETRO PIXEL STYLE · POWERED BY GITHUB PAGES
+  </footer>
+
+  <!-- =========================================================
+       MAPLESTORY STYLE DIALOG WINDOWS
+       ========================================================= -->
+
+  <!-- [H] HOBBIES WINDOW -->
+  <dialog class="win" id="win-hobbies" aria-labelledby="win-hobbies-title">
+    <div class="win-inner px-frame">
+      <div class="win-title" id="win-hobbies-title">
+        <span data-sprite="heart" data-scale="2"></span>
+        <span>[H] HOBBIES & INTERESTS</span>
+        <span class="key">ESC</span>
+        <button class="win-close" type="button" aria-label="Close">X</button>
+      </div>
+      <div class="win-body">
+        <div class="hobbies-grid" id="hobbies-grid"></div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- [I] INVENTORY WINDOW (GAMES) -->
+  <dialog class="win" id="win-inventory" aria-labelledby="win-inventory-title">
+    <div class="win-inner px-frame">
+      <div class="win-title" id="win-inventory-title">
+        <span data-sprite="bag" data-scale="2"></span>
+        <span>[I] GAME INVENTORY</span>
+        <span class="key">ESC</span>
+        <button class="win-close" type="button" aria-label="Close">X</button>
+      </div>
+      <div class="win-body">
+        <div class="inv-grid" id="inventory-grid"></div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- [G] GALLERY WINDOW (3D/BLENDER) -->
+  <dialog class="win" id="win-gallery" aria-labelledby="win-gallery-title">
+    <div class="win-inner px-frame">
+      <div class="win-title" id="win-gallery-title">
+        <span data-sprite="frame" data-scale="2"></span>
+        <span>[G] 3D & BLENDER GALLERY</span>
+        <span class="key">ESC</span>
+        <button class="win-close" type="button" aria-label="Close">X</button>
+      </div>
+      <div class="win-body">
+        <div class="gallery-grid" id="gallery-grid"></div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- [A] ALBUM WINDOW -->
+  <dialog class="win" id="win-album" aria-labelledby="win-album-title">
+    <div class="win-inner px-frame">
+      <div class="win-title" id="win-album-title">
+        <span data-sprite="camera" data-scale="2"></span>
+        <span>[A] PHOTO & SCREENSHOT ALBUM</span>
+        <span class="key">ESC</span>
+        <button class="win-close" type="button" aria-label="Close">X</button>
+      </div>
+      <div class="win-body">
+        <div class="album-grid" id="album-grid"></div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- [Q] QUESTS WINDOW -->
+  <dialog class="win" id="win-quests" aria-labelledby="win-quests-title">
+    <div class="win-inner px-frame">
+      <div class="win-title" id="win-quests-title">
+        <span data-sprite="scroll" data-scale="2"></span>
+        <span>[Q] QUEST LOG & TIMELINE</span>
+        <span class="key">ESC</span>
+        <button class="win-close" type="button" aria-label="Close">X</button>
+      </div>
+      <div class="win-body">
+        <div class="quests-list" id="quests-list"></div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- [R] IN-PAGE REVIEW READER MODAL -->
+  <dialog class="win" id="win-review" aria-labelledby="review-title">
+    <div class="win-inner px-frame">
+      <div class="win-title">
+        <span>[★] GAME REVIEW LOG</span>
+        <span class="key">ESC</span>
+        <button class="win-close" type="button" aria-label="Close">X</button>
+      </div>
+      <div class="win-body" style="line-height: 1.8;">
+        <div style="display: flex; justify-content: space-between; font-family: var(--font-pixel); font-size: 8px; color: var(--accent); margin-bottom: 8px;">
+          <span id="review-date">DATE</span>
+          <span id="review-score">SCORE</span>
+        </div>
+        <h3 id="review-title" style="margin: 0 0 16px; color: #fff; font-size: 18px;">TITLE</h3>
+        <div id="review-body" style="color: #ddd;"></div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- [👾] ARCADE CABINET MODAL (SPACE INVADERS EASTER EGG) -->
+  <dialog class="win" id="win-arcade" aria-labelledby="win-arcade-title">
+    <div class="win-inner px-frame">
+      <div class="win-title" id="win-arcade-title" style="background: var(--cyan); color: #000;">
+        <span data-sprite="ship" data-scale="2"></span>
+        <span>VANA INVADERS '26</span>
+        <span class="key">ESC</span>
+        <button class="win-close" type="button" aria-label="Close">X</button>
+      </div>
+
+      <div class="win-body arcade-wrap">
+        <div class="arcade-screen">
+          <canvas id="arcade-canvas"></canvas>
+        </div>
+
+        <div class="arcade-controls">
+          <div class="arcade-dpad">
+            <button class="arcade-btn" id="arcade-btn-left" type="button">◀ LEFT</button>
+            <button class="arcade-btn" id="arcade-btn-right" type="button">RIGHT ▶</button>
+          </div>
+          <button class="arcade-btn fire" id="arcade-btn-fire" type="button">FIRE [SPACE]</button>
+          <button class="arcade-btn" id="arcade-btn-start" type="button">START</button>
+        </div>
+
+        <div style="font-family: var(--font-pixel); font-size: 7px; color: #777; margin-top: 10px; text-align: center;">
+          KEYBOARD: [A/D] or [◀/▶] MOVE · [SPACE] FIRE
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- JavaScript Modules -->
+  <script src="./js/sprites.js"></script>
+  <script src="./js/audio.js"></script>
+  <script src="./js/game.js"></script>
+  <script src="./data/site.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
